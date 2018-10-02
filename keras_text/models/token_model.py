@@ -57,28 +57,28 @@ class TokenModelFactory(object):
         if not token_encoder_model.allows_dynamic_length() and self.max_tokens is None:
             raise ValueError("The provided `token_encoder_model` does not allow variable length mini-batches. "
                              "You need to provide `max_tokens`")
-        if batch_size:
-            embedding_size = batch_size
-        else:
-            embedding_size =  len(self.token_index) + 1
+        # if batch_size:
+        #     embedding_size = batch_size
+        # else:
+        #     embedding_size =  len(self.token_index) + 1
 
         if self.embeddings_index is None:
             # The +1 is for unknown token index 0.
-            embedding_layer = Embedding(embedding_size,
-                                        self.embedding_dims,
+            embedding_layer = Embedding(input_dim = len(self.token_index) + 1,
+                                        output_dim = self.embedding_dims,
                                         input_length=self.max_tokens,
                                         mask_zero=True,
                                         trainable=trainable_embeddings)
         else:
-            embedding_layer = Embedding(embedding_size,
-                                        self.embedding_dims,
+            embedding_layer = Embedding(input_dim = len(self.token_index) + 1,
+                                        output_dim = self.embedding_dims,
                                         weights=[build_embedding_weights(self.token_index, self.embeddings_index)],
                                         input_length=self.max_tokens,
                                         batch_size=batch_size,
                                         mask_zero=True,
                                         trainable=trainable_embeddings)
 
-        sequence_input = Input(shape=(batch_size,), dtype='int32')
+        sequence_input = Input(shape=(self.max_tokens,), dtype='int32')
         x = embedding_layer(sequence_input)
         x = token_encoder_model(x)
         x = Dense(self.num_classes, activation=output_activation)(x)
