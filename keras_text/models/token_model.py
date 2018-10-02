@@ -57,7 +57,7 @@ class TokenModelFactory(object):
         if not token_encoder_model.allows_dynamic_length() and self.max_tokens is None:
             raise ValueError("The provided `token_encoder_model` does not allow variable length mini-batches. "
                              "You need to provide `max_tokens`")
-        print('len(self.token_index)', len(self.token_index), self.token_index)
+
         if self.embeddings_index is None:
             # Unknown token index len(self.token_index)-1.
             embedding_layer = Embedding(input_dim = len(self.token_index),
@@ -66,9 +66,13 @@ class TokenModelFactory(object):
                                         mask_zero=True,
                                         trainable=trainable_embeddings)
         else:
+            weights = [build_embedding_weights(self.token_index, self.embeddings_index)]
+            print('len self.token_index', len(self.token_index))
+            print('len self.embeddings_index', len(self.embeddings_index))
+            print('len weights', len(weights))
             embedding_layer = Embedding(input_dim = len(self.token_index),
                                         output_dim = self.embedding_dims,
-                                        weights=[build_embedding_weights(self.token_index, self.embeddings_index)],
+                                        weights=weights,
                                         input_length=self.max_tokens,
                                         batch_size=batch_size,
                                         mask_zero=True,
