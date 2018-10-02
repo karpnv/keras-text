@@ -62,8 +62,8 @@ def build_embedding_weights(word_index, embeddings_index):
     logger.info('Loading embeddings for all words in the corpus')
     embedding_dim = list(embeddings_index.values())[0].shape[-1]
 
-    # +1 since tokenizer words are indexed from 1. 0 is reserved for padding and unknown words.
-    embedding_weights = np.zeros((len(word_index) + 1, embedding_dim))
+    #0 is reserved for padding and unknown words.
+    embedding_weights = np.zeros((len(word_index), embedding_dim))
 
     for word, i in word_index.items():
         word_vector = embeddings_index.get(word)
