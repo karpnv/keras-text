@@ -74,6 +74,7 @@ class TokenModelFactory(object):
                                         self.embedding_dims,
                                         weights=[build_embedding_weights(self.token_index, self.embeddings_index)],
                                         input_length=self.max_tokens,
+                                        batch_size=batch_size,
                                         mask_zero=True,
                                         trainable=trainable_embeddings)
 
