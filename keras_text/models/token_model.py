@@ -60,6 +60,7 @@ class TokenModelFactory(object):
 
         if self.embeddings_index is None:
             # Unknown token index len(self.token_index)-1.
+            print('len(self.token_index)',len(self.token_index), self.token_index)
             embedding_layer = Embedding(input_dim = len(self.token_index),
                                         output_dim = self.embedding_dims,
                                         input_length=self.max_tokens,
