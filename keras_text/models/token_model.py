@@ -66,13 +66,13 @@ class TokenModelFactory(object):
                                         mask_zero=True,
                                         trainable=trainable_embeddings)
         else:
-            weights = [build_embedding_weights(self.token_index, self.embeddings_index)]
+            weights = build_embedding_weights(self.token_index, self.embeddings_index)
             print('len self.token_index', len(self.token_index))
             print('len self.embeddings_index', len(self.embeddings_index))
             print('len weights', len(weights))
             embedding_layer = Embedding(input_dim = len(self.token_index),
                                         output_dim = self.embedding_dims,
-                                        weights=weights,
+                                        weights=[weights],
                                         input_length=self.max_tokens,
                                         batch_size=batch_size,
                                         mask_zero=True,
