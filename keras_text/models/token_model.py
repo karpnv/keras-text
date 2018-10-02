@@ -78,7 +78,7 @@ class TokenModelFactory(object):
                                         mask_zero=True,
                                         trainable=trainable_embeddings)
 
-        sequence_input = Input(shape=(self.max_tokens,), dtype='int32')
+        sequence_input = Input(shape=(self.batch_size,), dtype='int32')
         x = embedding_layer(sequence_input)
         x = token_encoder_model(x)
         x = Dense(self.num_classes, activation=output_activation)(x)
