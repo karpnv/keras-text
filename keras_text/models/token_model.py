@@ -34,7 +34,7 @@ class TokenModelFactory(object):
             self.embeddings_index = None
             self.embedding_dims = embedding_dims
 
-    def build_model(self, token_encoder_model, trainable_embeddings=True, output_activation='softmax'):
+    def build_model(self, token_encoder_model, trainable_embeddings=True, output_activation='softmax', batch_size = None):
         """Builds a model using the given `text_model`
 
         Args:
@@ -46,6 +46,7 @@ class TokenModelFactory(object):
                 - `softmax` for binary or multi-class.
                 - `sigmoid` for multi-label classification.
                 - `linear` for regression output.
+            batch_size:  None or integer
 
         Returns:
             The model output tensor.
@@ -56,10 +57,14 @@ class TokenModelFactory(object):
         if not token_encoder_model.allows_dynamic_length() and self.max_tokens is None:
             raise ValueError("The provided `token_encoder_model` does not allow variable length mini-batches. "
                              "You need to provide `max_tokens`")
+        if batch_size:
+            embedding_size = batch_size
+        else:
+            embedding_size =  len(self.token_index) + 1
 
         if self.embeddings_index is None:
             # The +1 is for unknown token index 0.
-            embedding_layer = Embedding(len(self.token_index) + 1,
+            embedding_layer = Embedding(embedding_size,
                                         self.embedding_dims,
                                         input_length=self.max_tokens,
                                         mask_zero=True,
